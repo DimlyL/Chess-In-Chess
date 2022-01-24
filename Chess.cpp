@@ -20,7 +20,7 @@ iv straight_init_server_mode()
 		gethostname(hostname,sizeof(hostname));
 		HOSTENT* host=gethostbyname(hostname);
 		strcpy(ip,inet_ntoa(*(in_addr*)*host->h_addr_list));
-		printf("ï¿½ï¿½ï¿½ipï¿½ï¿½Ö·ï¿½ï¿½:%s\n\nï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...",ip);   
+		printf("ÄãµÄipµØÖ·ÊÇ:%s\n\nµÈ´ıÍæ¼ÒÁ¬Èë...",ip);   
 	}
 	if(server_mode==2)
 		printf("input ip:");
@@ -31,19 +31,18 @@ iv straight_init_server_mode()
 		system("cls");
 		if(server_mode==1)
 		{
-			print("ï¿½Ş·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Í¬Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ»ï¿½ï¿½ï¿½ï¿½Ôºï¿½ï¿½ï¿½ï¿½ï¿½...\n");
+			print("ÎŞ·¨ÉèÁ¢·şÎñ¶Ë...Çë¼ì²éÊÇ·ñÓĞÍ¬Ò»³ÌĞòÕıÔÚÔËĞĞ»òÕßÉÔºóÔÙÊÔ...\n");
 			getch();
 		}
 		else
 		{
-			print("ï¿½Ş·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...\n");
+			print("ÎŞ·¨Á¬½ÓÖÁ·şÎñÆ÷...Çë¼ì²éÍøÂç×´¿ö¼°·şÎñÆ÷ÊÇ·ñÕı³£Æô¶¯...\n");
 			getch();
 		}
 	}	
 }
 inline void printground(int num,int back)
 {
-	moveto(0,0);
 	if(num==10)
 	{
 		int col[15];
@@ -59,6 +58,7 @@ inline void printground(int num,int back)
 			if(col[i]!=back) printground(i,col[i]);
 		return;
 	}
+	moveto(0,0);
 	int x,y,tx,ty;
 	for(int i=1;i<=3;i++)
 		for(int j=1;j<=3;j++)
@@ -85,9 +85,9 @@ inline void printground(int num,int back)
 		for(int j=y;j<=y+2;j++)
 		{
 			if(board[i][j]==0) say_white("  ");
-			if(board[i][j]==1) say_red("ï¿½ï¿½");
-			if(board[i][j]==2) say_blue("ï¿½ï¿½");
-			if(board[i][j]==3) say_white("ï¿½ï¿½");
+			if(board[i][j]==1) say_red("¡ñ");
+			if(board[i][j]==2) say_blue("¡ñ");
+			if(board[i][j]==3) say_white("¡ñ");
 		}
 		say_white("|");
 	}
@@ -130,12 +130,20 @@ void game()
 						}
 				board[x][y]=3;
 				if(server_mode!=3) send_situation();
-			 	printground(10,0);
-			 	if(place!=0) printground(place,2);
+				if(x==0 and y==0)
+				{
+					if(place!=10) printground(10,0);
+				 	if(place!=0) printground(place,2);	
+				}
 				if(x!=0 and y!=0) 
 				{
 					if(complete(to[x][y])) printground(10,1);
-					else printground(to[x][y],1);
+					else
+					{
+						if(place!=10) printground(10,0);
+				 		if(place!=0) printground(place,2);
+						printground(to[x][y],1);
+					}
 				}
 			}
 	  		lastx=x,lasty=y;
@@ -151,20 +159,32 @@ void game()
 	}
 	else
 	{
-		int x=0,y=0;
+		int x=0,y=0,lastx=-1,lasty=-1;
 		while(1)
 		{
 			x=recv_int2();
 			y=recv_int2();
 			recv_situation();
 			if(x==-1 and y==-1) break;
-			printground(10,0);
-			if(place!=0) printground(place,2);
-			if(x!=0 and y!=0) 
+			if(lastx!=x or lasty!=y)
 			{
-				if(complete(to[x][y])) printground(10,1);
-				else printground(to[x][y],1);
+				if(x==0 and y==0)
+				{
+					if(place!=10) printground(10,0);
+					if(place!=0) printground(place,2);	
+				}
+				if(x!=0 and y!=0) 
+				{
+					if(complete(to[x][y])) printground(10,1);
+					else
+					{
+						if(place!=10) printground(10,0);
+				 		if(place!=0) printground(place,2);
+						printground(to[x][y],1);
+					}
+				}	
 			}
+			lastx=x,lasty=y;
 		}
 	}
 	turn=3-turn;
@@ -172,7 +192,7 @@ void game()
 	Sleep(100);
 	if(server_mode==3)
 	{
-		Sleep(900);
+		Sleep(400);
 		down(2);
 		turn=1;
 	}
@@ -200,4 +220,4 @@ int main()
 	}
 	game();
 }
-//ï¿½ï¿½ï¿½ï¿½Òªï¿½Ú±ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ -lwsock32 ï¿½ï¿½ï¿½Ü½ï¿½ï¿½Ğ±ï¿½ï¿½ï¿½ 
+//ÄãĞèÒªÔÚ±àÒëÑ¡ÏîÀï¼ÓÈë -lwsock32 ²ÅÄÜ½øĞĞ±àÒë 

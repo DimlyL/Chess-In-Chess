@@ -5,7 +5,7 @@
 #define KEY_DOWN(VK_NONAME) ((GetAsyncKeyState(VK_NONAME) & 0x8000) ? 1:0)
 using namespace std;
 using namespace __gnu_pbds;
-iv moveto(int a,int b) //ï¿½ï¿½ ï¿½ï¿½ 
+iv moveto(int a,int b) //ÁÐ ÐÐ 
 {
 	HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD coordScreen={short(a),short(b)};
@@ -112,8 +112,8 @@ inline int chan(int x)
 char c[20]; 
 inline int complete(int num)
 {
-	string s=change(num); 
-	strcpy(c,s.c_str()); 
+	//string s=change(num); 
+	//strcpy(c,s.c_str()); 
 	//if(tot>50) SetConsoleTitle(c);
 	int x=(num-1)/3*3+1,y=(num-1)%3*3+1;
 	for(int k=1;k<=2;k++)
