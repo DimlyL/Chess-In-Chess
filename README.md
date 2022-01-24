@@ -2,8 +2,6 @@
 
 A Chess Game
 
-（目前尚未上传）
-
 # 游玩方式
 
 下载 Release 中的 Chess.exe，或者下载 File 中的四个文件并使用 Dev-C++ 在添加编译选项 -lwsock32 后编译运行。
